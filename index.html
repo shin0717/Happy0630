@@ -83,7 +83,7 @@
         font-weight: bold;
         position: relative;
         border: 2px solid rgba(255, 158, 187, 0.2);
-        min-height: 85px;
+        min-height: 95px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -96,19 +96,20 @@
         font-size: 1.6em;
         font-weight: 900;
         text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        transition: all 0.3s;
     }
     
     .grid-name {
         font-size: 0.85em;
         color: #5c3443;
-        margin-top: 8px;
+        margin-top: 6px;
         display: none; 
         padding: 0 6px;
         font-weight: bold;
         line-height: 1.3;
     }
 
-    /* 🎯 貼回海報的可愛實體卡片 */
+    /* 🎯 貼回海報的可愛實體卡片樣式修改：上面大字，下面小字 */
     .poster-grid-item.pasted {
         background: linear-gradient(135deg, #fff5f7, #ffe3ec) !important; 
         border-color: #ff9ebb !important;
@@ -118,13 +119,15 @@
     }
     .poster-grid-item.pasted .grid-赏 {
         color: #de4772 !important;
-        font-size: 1.1em; 
+        font-size: 1.3em; /* 縮小一點點以騰出空間給下排小字 */
+        margin-bottom: 2px;
     }
     .poster-grid-item.pasted .grid-name {
         display: -webkit-box; 
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        color: #663d4f;
     }
 
     /* 📦 右側：草莓歐蕾抽獎箱區塊 */
@@ -141,18 +144,19 @@
         letter-spacing: 1px;
     }
 
+    /* 🗃️ 抽獎箱修改：使用固定 4 行的 grid 網格，完美實現 4*3 排列 */
     .ichiban-box {
         background: rgba(74, 40, 52, 0.7); 
         border: 5px solid #ff9ebb; 
         border-top-color: #ffd0dd;
         border-left-color: #ffb3c6;
         border-radius: 18px;
-        padding: 25px 15px;
-        min-height: 300px; /* 配合左邊高度，加高抽獎箱 */
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: center;
+        padding: 25px 20px;
+        min-height: 310px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 剛好 4 欄 */
+        gap: 15px 12px;
+        justify-items: center;
         align-content: center;
         box-shadow: 
             inset 0 15px 30px rgba(0,0,0,0.6), 
@@ -163,7 +167,8 @@
 
     /* 🎫 抽獎箱裡的愛心小籤紙 */
     .lottery-ticket {
-        width: 60px;
+        width: 100%;
+        max-width: 65px;
         height: 85px;
         background: linear-gradient(135deg, #ff85a2, #e3446c); 
         border: 2px solid #ffe3ec; 
@@ -184,11 +189,11 @@
         border-color: #ffffff;
     }
 
-    /* 📱 RWD 手機板自動變回上下排版 */
+    /* 📱 RWD 手機板自動變回雙欄，抽獎箱改 3 欄避免太擁擠 */
     @media (max-width: 850px) {
         .main-layout { flex-direction: column; }
         .poster-board { grid-template-columns: repeat(2, 1fr); }
-        .ichiban-box { min-height: 160px; }
+        .ichiban-box { grid-template-columns: repeat(3, 1fr); min-height: 160px; }
     }
 
     /* 🎬 撕開動畫大特寫舞台 */
@@ -224,23 +229,34 @@
         border: 3px solid #ffccd5;
     }
 
+    /* 🏷️ 開獎內頁排版修改：支援上面大字下面小字 */
     .inner-prize {
         text-align: center;
         color: #333;
         width: 100%;
         padding: 20px;
         display: flex;
+        flex-direction: column; /* 直式排列 */
         justify-content: center;
         align-items: center;
     }
     
-    /* 🔒 修正亮點：加大字體並移除下方小字標註，只留下最純粹的內容大字 */
-    .prize-badge {
-        font-size: 2em;
+    /* 上面大字：X賞 */
+    .prize-badge-title {
+        font-size: 2.2em;
         font-weight: 900;
         color: #e3446c;
-        line-height: 1.4;
+        line-height: 1.2;
         letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    /* 下面小字：純內容 */
+    .prize-badge-detail {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #4a2333;
+        line-height: 1.3;
     }
 
     /* 撕開前的精緻卡片封面 */
@@ -322,7 +338,8 @@
         <p id="ripTip" style="color: #ffccd5; font-weight: bold; margin-bottom: 18px; font-size: 1.35em; text-shadow: 0 2px 6px #000; letter-spacing: 2px;">💖 點擊卡片把它驚喜撕開！ 💖</p>
         <div class="rip-ticket-box">
             <div class="inner-prize">
-                <div class="prize-badge" id="displayId"></div>
+                <div class="prize-badge-title" id="displayIdTitle"></div>
+                <div class="prize-badge-detail" id="displayIdDetail"></div>
             </div>
             <div class="top-cover" id="ticketCover" onclick="triggerRipAnimation()">
                 <span style="font-size: 1.6em; margin-bottom: 6px;">🎁</span>
@@ -334,14 +351,14 @@
 </div>
 
 <script>
-    // ⚙️ 專屬獎品內容與精準數量
+    // ⚙️ 專屬獎品內容與精準數量 (總共 11 個項目，剛好可排入 4*3 的格子中)
     const prizesConfig = [
-        { "id": "A", "name": "A賞：手寫卡片❤️", "count": 1 },
-        { "id": "B", "name": "B賞：可愛小鏡子一枚", "count": 1 },
-        { "id": "C", "name": "C賞：盲盒一個", "count": 1 },
-        { "id": "D", "name": "D賞：隨機小卡", "count": 5 },
-        { "id": "E", "name": "E賞：親親", "count": 2 },
-        { "id": "F", "name": "F賞：搖桿一隻", "count": 1 }
+        { "id": "A", "name": "手寫卡片❤️", "count": 1 },
+        { "id": "B", "name": "可愛小鏡子一枚", "count": 1 },
+        { "id": "C", "name": "盲盒一個", "count": 1 },
+        { "id": "D", "name": "隨機小卡", "count": 5 },
+        { "id": "E", "name": "親親", "count": 2 },
+        { "id": "F", "name": "搖桿一隻", "count": 1 }
     ];
 
     let posterData = [];
@@ -362,7 +379,7 @@
         let posterHtml = '<div class="poster-title">📊 獎項貼紙公佈欄：</div>';
         posterData.forEach(item => {
             let pastedClass = item.isDrawn ? 'pasted' : '';
-            let nameContent = item.isDrawn ? (item.name) : '';
+            let nameContent = item.isDrawn ? item.name : '';
             posterHtml += `
                 <div class="poster-grid-item ${pastedClass}" id="poster-item-${item.uid}">
                     <div class="grid-赏">${item.id}賞</div>
@@ -374,7 +391,7 @@
 
         let container = document.getElementById('cardContainer');
         if (ticketPool.length === 0) {
-            container.innerHTML = "<div style='font-size:1.1em; color:#ffccd5; padding:20px; text-align:center; width:100%; font-weight:bold;'>🎉 完售！所有驚喜都被抽空囉！生日快樂！ 🎉</div>";
+            container.innerHTML = "<div style='grid-column: 1 / -1; font-size:1.1em; color:#ffccd5; padding:20px; text-align:center; width:100%; font-weight:bold;'>🎉 完售！所有驚喜都被抽空囉！生日快樂！ 🎉</div>";
             return;
         }
 
@@ -387,7 +404,8 @@
 
     function openRipStage(index) {
         currentSelectedIndex = index;
-        document.getElementById('displayId').innerText = "";
+        document.getElementById('displayIdTitle').innerText = "";
+        document.getElementById('displayIdDetail').innerText = "";
         document.getElementById('ripStage').classList.add('active');
     }
 
@@ -400,8 +418,10 @@
         document.getElementById('ripTip').style.display = 'none';
 
         setTimeout(() => {
-            // 🔒 這裡只放入完整的內容名稱（例如：A賞：手寫卡片❤️），不再分行標註重複的文字
-            document.getElementById('displayId').innerText = selectedTicket.name;
+            // 🔒 上面大字顯示 XX賞，下面小字直接丟純名稱
+            document.getElementById('displayIdTitle').innerText = selectedTicket.id + "賞";
+            document.getElementById('displayIdDetail').innerText = selectedTicket.name;
+            
             let posterItem = posterData.find(p => p.uid === selectedTicket.uid);
             if (posterItem) posterItem.isDrawn = true;
         }, 80);
@@ -414,7 +434,8 @@
     function closeStage() {
         document.getElementById('ripStage').classList.remove('active');
         document.getElementById('ticketCover').classList.remove('ripped');
-        document.getElementById('displayId').innerText = "";
+        document.getElementById('displayIdTitle').innerText = "";
+        document.getElementById('displayIdDetail').innerText = "";
         document.getElementById('ripTip').style.display = 'block';
         document.getElementById('closeStageBtn').style.display = 'none';
 
