@@ -11,46 +11,57 @@
         margin: 0;
         padding: 20px 10px;
         font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 95vh;
     }
     
     .lottery-container {
         background: linear-gradient(135deg, #331d2c, #1f121b); 
         color: #fff;
-        padding: 30px 20px;
-        border-radius: 24px; /* 更圓潤的可愛感 */
+        padding: 30px;
+        border-radius: 24px; 
         text-align: center;
-        max-width: 750px;
-        margin: 0 auto;
+        width: 100%;
+        max-width: 1100px; /* 加寬整體容器以容納左右排版 */
         box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255, 182, 193, 0.1);
         border: 2px solid rgba(255, 182, 193, 0.15);
+        box-sizing: border-box;
     }
 
-    /* 👑 主標題：加粗、閃亮、加上星星 */
+    /* 👑 主標題 */
     h2 { 
         color: #ffccd5; 
         text-shadow: 0 0 12px rgba(255,182,193,0.6), 0 2px 4px rgba(0,0,0,0.5); 
         margin-top: 5px;
         margin-bottom: 25px; 
-        font-size: 1.8em;
+        font-size: 2em;
         letter-spacing: 2px;
     }
 
-    /* 🗺️ 夢幻馬卡龍配率海報牆 */
+    /* 🧱 核心左右大版面區塊 */
+    .main-layout {
+        display: flex;
+        gap: 25px;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    /* 🗺️ 左側：夢幻馬卡龍海報牆 */
+    .left-poster-section {
+        flex: 1.2; /* 讓海報牆稍微寬一點 */
+    }
+
     .poster-board {
         background: rgba(255, 255, 255, 0.04);
         border: 3px dashed #ff9ebb;
         border-radius: 16px;
         padding: 20px;
-        margin-bottom: 30px;
         display: grid;
-        grid-template-columns: repeat(4, 1fr); /* 改為 4 欄更適合 11 張籤的排版 */
+        grid-template-columns: repeat(3, 1fr); /* 左右排版時改為 3 欄更精緻 */
         gap: 12px;
         box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
-    }
-    
-    /* 手機板自動適應排版 */
-    @media (max-width: 600px) {
-        .poster-board { grid-template-columns: repeat(2, 1fr); }
     }
     
     .poster-title {
@@ -61,12 +72,9 @@
         margin-bottom: 12px;
         text-align: left;
         letter-spacing: 1px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
     }
 
-    /* 🔲 還沒抽到的空白海報格 */
+    /* 🔲 海報空格 */
     .poster-grid-item {
         background: rgba(255, 255, 255, 0.06); 
         color: #ffb3c6;
@@ -91,7 +99,7 @@
     }
     
     .grid-name {
-        font-size: 0.75em;
+        font-size: 0.85em;
         color: #5c3443;
         margin-top: 8px;
         display: none; 
@@ -100,13 +108,13 @@
         line-height: 1.3;
     }
 
-    /* 🎯 抽中後貼回海報的可愛實體卡片狀態 */
+    /* 🎯 貼回海報的可愛實體卡片 */
     .poster-grid-item.pasted {
         background: linear-gradient(135deg, #fff5f7, #ffe3ec) !important; 
         border-color: #ff9ebb !important;
         color: #4a2333 !important;
         box-shadow: 0 6px 15px rgba(255,158,187,0.4);
-        transform: scale(1.03) rotate(1deg); /* 微微傾斜更有手作感 */
+        transform: scale(1.03) rotate(1deg); 
     }
     .poster-grid-item.pasted .grid-赏 {
         color: #de4772 !important;
@@ -119,51 +127,68 @@
         overflow: hidden;
     }
 
-    /* 📦 草莓歐蕾軟糖抽獎箱 */
+    /* 📦 右側：草莓歐蕾抽獎箱區塊 */
+    .right-box-section {
+        flex: 1;
+        text-align: left;
+    }
+
+    .box-title {
+        font-weight: bold;
+        color: #ffccd5;
+        font-size: 1.1em;
+        margin-bottom: 12px;
+        letter-spacing: 1px;
+    }
+
     .ichiban-box {
         background: rgba(74, 40, 52, 0.7); 
         border: 5px solid #ff9ebb; 
         border-top-color: #ffd0dd;
         border-left-color: #ffb3c6;
         border-radius: 18px;
-        padding: 30px 20px;
-        min-height: 160px;
+        padding: 25px 15px;
+        min-height: 300px; /* 配合左邊高度，加高抽獎箱 */
         display: flex;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 12px;
         justify-content: center;
-        align-items: center;
+        align-content: center;
         box-shadow: 
             inset 0 15px 30px rgba(0,0,0,0.6), 
             inset 0 -15px 30px rgba(0,0,0,0.4),
             0 12px 25px rgba(0,0,0,0.5);
-        margin-bottom: 10px;
         position: relative;
     }
 
     /* 🎫 抽獎箱裡的愛心小籤紙 */
     .lottery-ticket {
-        width: 65px;
-        height: 90px;
+        width: 60px;
+        height: 85px;
         background: linear-gradient(135deg, #ff85a2, #e3446c); 
         border: 2px solid #ffe3ec; 
-        border-radius: 10px; /* 更圓潤 */
+        border-radius: 10px; 
         box-shadow: 0 5px 10px rgba(0,0,0,0.4);
         cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 2.2em; 
+        font-size: 2em; 
         color: #fff;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        transition: transform 0.2s, box-shadow 0.2s;
         user-select: none;
     }
     .lottery-ticket:hover {
-        transform: translateY(-8px) scale(1.1) rotate(-2deg);
-        box-shadow: 0 12px 22px rgba(255,133,162,0.6);
+        transform: translateY(-6px) scale(1.1) rotate(-2deg);
+        box-shadow: 0 10px 20px rgba(255,133,162,0.6);
         border-color: #ffffff;
-        background: linear-gradient(135deg, #ff9ebb, #f0547c);
+    }
+
+    /* 📱 RWD RWD 手機板自動變回上下排版 */
+    @media (max-width: 850px) {
+        .main-layout { flex-direction: column; }
+        .poster-board { grid-template-columns: repeat(2, 1fr); }
+        .ichiban-box { min-height: 160px; }
     }
 
     /* 🎬 撕開動畫大特寫舞台 */
@@ -204,15 +229,19 @@
         color: #333;
         width: 100%;
         padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
+    
+    /* 🔒 修正亮點：加大字體並移除下方小字標註，只留下最純粹的內容大字 */
     .prize-badge {
-        font-size: 2.6em;
+        font-size: 2em;
         font-weight: 900;
         color: #e3446c;
-        margin-bottom: 6px;
+        line-height: 1.4;
         letter-spacing: 1px;
     }
-    .prize-title { font-size: 1.25em; font-weight: bold; color: #4a2333; }
 
     /* 撕開前的精緻卡片封面 */
     .top-cover {
@@ -235,7 +264,6 @@
         z-index: 2;
     }
     
-    /* 鋸齒花邊 */
     .top-cover::after {
         content: '';
         position: absolute;
@@ -251,7 +279,6 @@
         box-shadow: 12px 0 30px rgba(0,0,0,0.5);
     }
 
-    /* 可愛蝴蝶結/圓角風格按鈕 */
     .close-btn {
         position: absolute;
         bottom: -70px;
@@ -268,7 +295,7 @@
         transition: 0.2s;
         text-shadow: 0 1px 2px rgba(0,0,0,0.15);
     }
-    .close-btn:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255,133,162,0.7); }
+    .close-btn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body>
@@ -276,10 +303,18 @@
 <div class="lottery-container">
     <h2>✨小碩的生日一番賞✨</h2>
     
-    <div class="poster-board" id="posterBoard"></div>
+    <div class="main-layout">
+        
+        <div class="left-poster-section">
+            <div class="poster-board" id="posterBoard"></div>
+        </div>
 
-    <p style="color: #ffccd5; font-size: 0.95em; margin-bottom: 15px; text-align: left; padding-left: 5px; font-weight: bold;">✨ 抽獎箱（請點選任意一個紅包卡片 🎫）</p>
-    <div class="ichiban-box" id="cardContainer"></div>
+        <div class="right-box-section">
+            <div class="box-title">🎁 抽獎箱（請點選任一個 🎁）</div>
+            <div class="ichiban-box" id="cardContainer"></div>
+        </div>
+
+    </div>
 </div>
 
 <div class="rip-stage" id="ripStage">
@@ -288,14 +323,13 @@
         <div class="rip-ticket-box">
             <div class="inner-prize">
                 <div class="prize-badge" id="displayId"></div>
-                <div class="prize-title" id="displayName"></div>
             </div>
             <div class="top-cover" id="ticketCover" onclick="triggerRipAnimation()">
                 <span style="font-size: 1.6em; margin-bottom: 6px;">🎁</span>
                 <span style="font-size: 0.85em; letter-spacing: 3px;">PULL 撕開驚喜</span>
             </div>
         </div>
-        <button class="close-btn" id="closeStageBtn" onclick="closeStage()">收下獎項並貼上海報 ✨</button>
+        <button class="close-btn" id="closeStageBtn" onclick="closeStage()">收下並貼上海報 ✨</button>
     </div>
 </div>
 
@@ -319,14 +353,13 @@
         }
     });
 
-    // 複製一份並洗牌
     let ticketPool = [...posterData];
     ticketPool.sort(() => Math.random() - 0.5); 
 
     let currentSelectedIndex = null;
 
     function renderGame() {
-        let posterHtml = '<div class="poster-title">📊 獎項貼紙公佈欄（抽中後會貼在此處）：</div>';
+        let posterHtml = '<div class="poster-title">📊 獎項貼紙公佈欄：</div>';
         posterData.forEach(item => {
             let pastedClass = item.isDrawn ? 'pasted' : '';
             let nameContent = item.isDrawn ? (item.name) : '';
@@ -341,7 +374,7 @@
 
         let container = document.getElementById('cardContainer');
         if (ticketPool.length === 0) {
-            container.innerHTML = "<div style='font-size:1.2em; color:#ffccd5; padding:40px; letter-spacing:1px; font-weight:bold;'>🎉 完售！所有驚喜都被抽空囉！生日快樂！ 🎉</div>";
+            container.innerHTML = "<div style='font-size:1.1em; color:#ffccd5; padding:20px; text-align:center; width:100%; font-weight:bold;'>🎉 完售！所有驚喜都被抽空囉！生日快樂！ 🎉</div>";
             return;
         }
 
@@ -355,7 +388,6 @@
     function openRipStage(index) {
         currentSelectedIndex = index;
         document.getElementById('displayId').innerText = "";
-        document.getElementById('displayName').innerText = "";
         document.getElementById('ripStage').classList.add('active');
     }
 
@@ -368,8 +400,8 @@
         document.getElementById('ripTip').style.display = 'none';
 
         setTimeout(() => {
-            document.getElementById('displayId').innerText = selectedTicket.id + " 賞";
-            document.getElementById('displayName').innerText = selectedTicket.name;
+            // 🔒 這裡只放入完整的內容名稱（例如：A賞：手寫卡片❤️），不再分行標註重複的文字
+            document.getElementById('displayId').innerText = selectedTicket.name;
             let posterItem = posterData.find(p => p.uid === selectedTicket.uid);
             if (posterItem) posterItem.isDrawn = true;
         }, 80);
@@ -383,7 +415,6 @@
         document.getElementById('ripStage').classList.remove('active');
         document.getElementById('ticketCover').classList.remove('ripped');
         document.getElementById('displayId').innerText = "";
-        document.getElementById('displayName').innerText = "";
         document.getElementById('ripTip').style.display = 'block';
         document.getElementById('closeStageBtn').style.display = 'none';
 
