@@ -169,7 +169,7 @@
             0 12px 25px rgba(0,0,0,0.5);
     }
 
-    /* 🎫 抽獎箱裡的卡片 (維持相同結構樣式) */
+    /* 🎫 抽獎箱裡的未翻開神祕卡片 */
     .lottery-ticket {
         background: linear-gradient(135deg, #ff85a2, #e3446c); 
         border: 2px solid #ffe3ec; 
@@ -183,6 +183,11 @@
         transform: translateY(-5px) scale(1.05);
         box-shadow: 0 10px 20px rgba(255,133,162,0.6);
         border-color: #ffffff;
+    }
+    /* 未翻開前的大字樣式修正：只給大問號 */
+    .lottery-ticket .card-main {
+        font-size: 1.8em;
+        font-weight: bold;
     }
 
     /* 📱 RWD 行動裝置自動重排 */
@@ -226,7 +231,7 @@
         border: 3px solid #ffccd5;
     }
 
-    /* 內部揭曉的卡片，同樣也是上大下小 */
+    /* 內部揭曉的卡片，此時才秀出：上大字、下小字 */
     .inner-prize {
         width: 100%;
         height: 100%;
@@ -362,7 +367,6 @@
     let globalId = 0;
     prizesConfig.forEach(p => {
         for (let i = 0; i < p.count; i++) {
-            // 先過濾出乾淨的名稱 (小字專用，避免重複出現「賞」)
             let shortName = cleanPrizeName(p.name, p.id);
             posterData.push({ 
                 "uid": globalId, 
@@ -375,14 +379,14 @@
         }
     });
 
-    // 複製出一份隨機洗牌的抽獎箱卡片池
+    // 隨機洗牌的抽獎箱卡片池
     let ticketPool = [...posterData];
     ticketPool.sort(() => Math.random() - 0.5); 
 
     let currentSelectedIndex = null;
 
     function renderGame() {
-        // 1. 渲染左側海報公佈欄
+        // 1. 渲染左側海報公佈欄 (始終維持上大字下小字結構)
         let posterHtml = '<div class="poster-title">📊 獎項貼紙公佈欄：</div>';
         posterData.forEach(item => {
             let pastedClass = item.isDrawn ? 'pasted' : '';
@@ -403,16 +407,17 @@
             container.innerHTML = "<div style='font-size:1.1em; color:#ffccd5; padding:40px 10px; text-align:center; width:100%; font-weight:bold;'>🎉 完售！所有驚喜都被抽空囉！生日快樂！ 🎉</div>";
             return;
         } else {
-            container.style.display = "grid"; // 確保維持 4*3 網格
+            container.style.display = "grid"; 
         }
 
         let cardsHtml = '';
         ticketPool.forEach((ticket, index) => {
-            // 抽獎箱內的卡片未撕開前，統一格式，上面顯示大大的大字，下面不重複賞字顯示驚喜
+            // 🔒 修正：還沒翻開時隱藏「是什麼賞」！
+            // 統一用問號大字及神秘標記代替，翻開後才看得見真相！
             cardsHtml += `
                 <div class="universal-card lottery-ticket" onclick="openRipStage(${index})">
-                    <div class="card-main">${ticket.mainText}</div>
-                    <div class="card-sub" style="opacity:0.8; font-size:0.75em;">❔❔❔</div>
+                    <div class="card-main">?</div>
+                    <div class="card-sub" style="opacity: 0.6; font-size: 0.8em;">LUCKY</div>
                 </div>
             `;
         });
@@ -435,7 +440,7 @@
         document.getElementById('ripTip').style.display = 'none';
 
         setTimeout(() => {
-            // 特寫舞台上的卡片同步為：上面大字，下面小字
+            // 🔓 此時在撕開卡片的舞台上正式揭曉資訊：上面大字，下面小字
             document.getElementById('displayMain').innerText = selectedTicket.mainText;
             document.getElementById('displaySub').innerText = selectedTicket.subText;
             
